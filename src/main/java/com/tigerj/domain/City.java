@@ -5,10 +5,11 @@ import lombok.Data;
 @Data
 public class City {
 	
+	private Long id;
+	
 	private String country;
-	
-	private String state;
-	
+
 	private String name;
 
+	private String state;
 }

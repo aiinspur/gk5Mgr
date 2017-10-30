@@ -33,8 +33,8 @@ import org.springframework.web.context.WebApplicationContext;
 // Enable JMX so we can test the MBeans (you can't do this in a properties file)
 @TestPropertySource(properties = { "spring.jmx.enabled:true","spring.datasource.jmx-enabled:true" })
 //Separate profile for web tests to avoid clashing databases
-@ActiveProfiles("scratch")
-public class Gk5ApplicationTests {
+//@ActiveProfiles("scratch")
+public class Gk5MgrApplicationTests {
 
 	@Autowired
 	private WebApplicationContext context;
@@ -49,8 +49,8 @@ public class Gk5ApplicationTests {
 	@Test
 	public void testHome() throws Exception {
 
-		this.mvc.perform(get("/")).andExpect(status().isOk())
-				.andExpect(model().size(1))
+		this.mvc.perform(get("/api/customer/index")).andExpect(status().isOk())
+				//.andExpect(model().size(1))
 				.andDo(print());
 	}
 

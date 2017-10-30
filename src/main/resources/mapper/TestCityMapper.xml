@@ -1,0 +1,75 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tigerj.dao.TestCityMapper">
+	<sql id="columns">
+		name AS name,
+		login_test AS loginTest,
+		id AS id,
+		UUUU_yyyy_OOO AS uuuuYyyyOoo
+	</sql>
+
+	<sql id="table_name">T_TEST_USER</sql>
+
+	<select id="selectById" parameterType="java.lang.Long"
+		resultType="TestCity">
+		select
+		<include refid="columns" />
+		from
+		<include refid="table_name" />
+		where id = #{id}
+	</select>
+
+	<insert id="insert" parameterType="TestCity">
+		insert into
+		<include refid="table_name" />
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="name != null">
+				name,
+			</if>
+			<if test="loginTest != null">
+				login_test,
+			</if>
+			<if test="id != null">
+				id,
+			</if>
+			<if test="uuuuYyyyOoo != null">
+				UUUU_yyyy_OOO
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="loginTest != null">
+				#{loginTest,jdbcType=VARCHAR},
+			</if>
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="uuuuYyyyOoo != null">
+				#{uuuuYyyyOoo,jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</insert>
+
+	<update id="update">
+		update
+		<include refid="table_name" />
+		<set>
+			<if test="name != null">
+				name ＝ #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="loginTest != null">
+				login_test ＝ #{loginTest,jdbcType=VARCHAR},
+			</if>
+			<if test="id != null">
+				id ＝ #{id,jdbcType=BIGINT},
+			</if>
+			<if test="uuuuYyyyOoo != null">
+				UUUU_yyyy_OOO ＝ #{uuuuYyyyOoo,jdbcType=VARCHAR}
+			</if>
+		</set>
+		where ID = #{id}
+	</update>
+</mapper>

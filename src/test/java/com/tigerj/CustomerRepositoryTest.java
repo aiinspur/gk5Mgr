@@ -1,43 +1,45 @@
 package com.tigerj;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import com.tigerj.domain.Customer;
-import com.tigerj.repository.CustomerRepository;
+import com.tigerj.dao.common.Status;
+import com.tigerj.domain.TestCustomer;
+import com.tigerj.service.CustomerService;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class CustomerRepositoryTest {
+public class CustomerRepositoryTest extends BaseTest{
 	
 	@Autowired
-	private CustomerRepository customerRepository;
+	CustomerService customerService;
 	
 	@Test
-	public void jpaTest(){
-		customerRepository.save(new Customer("Jiang", "Hu"));
-		customerRepository.save(new Customer("Li", "Hu"));
-		customerRepository.save(new Customer("Liu", "XianWei"));
-		customerRepository.save(new Customer("Hou", "Cong"));
-		
-		for (Customer customer : customerRepository.findAll()) {
-			System.out.println(customer.toString());
-		}
-		System.out.println();
-		
-		Customer customer = customerRepository.findOne(1L);
-		System.out.println("Customer found with findOne(1L):");
-		System.out.println(customer.toString());
-		System.out.println();
-		
-		System.out.println("Customer found with findByLastName('Hu'):");
-		for (Customer hu : customerRepository.findByLastName("Hu")) {
-			System.out.println(hu.toString());
-		}
-		
+	public void saveTest(){
+		TestCustomer entity = new TestCustomer();
+		//entity.setStatus(Status.NORMAL);
+		entity.setFirstName("Jiang");
+		entity.setLastName("hu1");
+		customerService.saveOrUpdate(entity);
 	}
+	
+	@Test
+	public void updateTest(){
+		
+		TestCustomer result = customerService.selectById(123L);
+		assertNotNull(result);
+		
+		TestCustomer entity = new TestCustomer();
+		entity.setId(result.getId());
+		entity.setStatus(Status.NORMAL);
+		entity.setFirstName("Wei");
+		entity.setLastName("qiang");
+		customerService.saveOrUpdate(entity);
+		
+		TestCustomer customer = customerService.selectById(123L);
+		assertEquals(customer.getFirstName(), "Wei");
+	}
+	
 
 }

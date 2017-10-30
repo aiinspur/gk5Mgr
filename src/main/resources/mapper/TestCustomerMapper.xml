@@ -1,0 +1,96 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tigerj.dao.TestCustomerMapper">
+	<sql id="columns">
+		id,
+		first_name AS "firstName",
+		last_name As "lastName"
+	</sql>
+
+	<sql id="table_name">t_test_customer</sql>
+
+	<select id="selectById" parameterType="java.lang.Long"
+		resultType="TestCustomer">
+		select
+		<include refid="columns" />
+		from
+		<include refid="table_name" />
+		where id = #{id}
+	</select>
+
+	<select id="selectByLastName" parameterType="java.lang.String"
+		resultType="TestCustomer">
+		select
+		<include refid="columns" />
+		from
+		<include refid="table_name" />
+		where last_name = #{lastName}
+	</select>
+
+	<insert id="insert" parameterType="TestCustomer">
+		insert into
+		<include refid="table_name" />
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="firstName != null">
+				first_name,
+			</if>
+			<if test="lastName != null">
+				last_name
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="firstName != null">
+				#{firstName,jdbcType=VARCHAR},
+			</if>
+			<if test="lastName != null">
+				#{lastName,jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</insert>
+
+	<update id="update">
+		update
+		<include refid="table_name" />
+		<set>
+			<if test="firstName != null">
+				first_name = #{firstName,jdbcType=VARCHAR},
+			</if>
+			<if test="lastName != null">
+				last_name = #{lastName,jdbcType=VARCHAR}
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+
+	<!-- 分页查询用户信息 -->
+	<select id="findList" resultType="TestCustomer">
+		SELECT
+		<include refid="columns" />
+		FROM
+		<include refid="table_name" />
+		<if test="firstName != null and firstName != ''">
+			AND a.first_name like CONCAT('%', #{firstName}, '%')
+		</if>
+		<if test="lastName != null and lastName != ''">
+			AND a.last_name like CONCAT('%', #{lastName}, '%')
+		</if>
+		<!-- 数据范围过滤 -->
+		<!-- ${sqlMap.dsf} -->
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.id
+			</otherwise>
+		</choose>
+	</select>
+
+</mapper>
